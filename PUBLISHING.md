@@ -1,19 +1,20 @@
 # Publishing checklist
 
-The package is built and verified locally. Nothing has been pushed.
+Version 1.0.0 source is published in the public GitHub repository:
+`https://github.com/huzhengcai471-crypto/cyber-red-ui`.
 
-## 1. Fill in your GitHub identity
-
-The repository is `huzhengcai471-crypto/cyber-red-ui`. Before publishing, update
-the private flag only if you intend to make the repository public, then repack:
+The repository includes the complete source and all bundled media assets.
+The `*.tgz` package is intentionally excluded from Git; users can install
+directly from the repository with:
 
 ```powershell
-node -e "const fs=require('fs');const p='package.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));j.private=false;fs.writeFileSync(p,JSON.stringify(j,null,2)+'\n')"
+dsh plugin --profile desktop add github:huzhengcai471-crypto/cyber-red-ui
 ```
 
-The repository links are already set to `huzhengcai471-crypto/cyber-red-ui`.
+Add `dsh-cyber-red-ui` to `dsh.profile.bundles` in the target profile and
+restart DSH.
 
-## 2. Quick sanity checks
+## 1. Quick sanity checks
 
 ```powershell
 node --check index.js
@@ -21,7 +22,7 @@ node --check client.js
 node -e "for (const f of ['client.js','index.js']) { const s=require('fs').readFileSync(f,'utf8'); if (/\uFFFD/.test(s)) throw new Error('mojibake in '+f) }"
 ```
 
-## 3. Pack
+## 2. Pack
 
 ```powershell
 pnpm pack
@@ -29,20 +30,17 @@ pnpm pack
 
 Expected: `dsh-cyber-red-ui-1.0.0.tgz`, ~82 MB.
 
-## 4. Publish to GitHub
+## 3. Publish future changes to GitHub
 
 ```powershell
-git init
 git add .
-git commit -m "dsh-cyber-red-ui 1.0.0"
-git branch -M main
-git remote add origin https://github.com/huzhengcai471-crypto/cyber-red-ui.git
+git commit -m "Describe the change"
 git push -u origin main
 ```
 
 > The tarball is git-ignored. Publish source; let users install from source.
 
-## 5. Optional: release asset
+## 4. Optional: release asset
 
 If you also want a downloadable tarball, attach `dsh-cyber-red-ui-1.0.0.tgz`
 to a GitHub Release. Users can then install with:
@@ -50,15 +48,6 @@ to a GitHub Release. Users can then install with:
 ```powershell
 dsh plugin --profile desktop add https://github.com/huzhengcai471-crypto/cyber-red-ui/releases/download/v1.0.0/dsh-cyber-red-ui-1.0.0.tgz
 ```
-
-## 6. How users install
-
-```powershell
-dsh plugin --profile desktop add github:huzhengcai471-crypto/cyber-red-ui
-```
-
-Then add `"dsh-cyber-red-ui"` to `dsh.profile.bundles` in
-`~/.dsh/profiles/desktop/package.json` and restart DSH.
 
 ## Notes on size
 
