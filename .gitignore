@@ -1,0 +1,28 @@
+# Dependency and build noise
+node_modules/
+.pnpm-store/
+
+# Packaging output
+*.tgz
+*.tar.gz
+dist/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local scratch
+*.log
+probe/
+_backup/
+_removed_from_package/
+_corrupted_*/
+
+# Per-machine DSH state that must never be committed
+.dsh/
+*.bak
+*.bak-*
+*.repaired

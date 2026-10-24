@@ -1,0 +1,71 @@
+{
+  "name": "dsh-cyber-red-ui",
+  "version": "1.0.0",
+  "description": "Cyber-red control-desk theme for DeepSeek Harness: crimson neon tokens, scanline overlay, lab status rail, dynamic video wallpapers, a music player and a full settings page. | 赛博红控台：黑底正红霓虹主题、扫描线叠加层、实验状态栏、动态视频壁纸、音乐播放器与独立设置页。",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "deepseek-harness-plugin",
+    "theme",
+    "cyberpunk",
+    "crimson",
+    "wallpaper",
+    "cordis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huzhengcai471-crypto/cyber-red-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/huzhengcai471-crypto/cyber-red-ui/issues"
+  },
+  "homepage": "https://github.com/huzhengcai471-crypto/cyber-red-ui",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md",
+    "README.zh.md",
+    "LICENSE",
+    "locale/*.json",
+    "assets/*.mp4",
+    "assets/*.ogg",
+    "assets/*.flac",
+    "assets/*.wav",
+    "assets/*.gif"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": ">=4.0.0-rc <5"
+  },
+  "engines": {
+    "node": "^22.15.0 || >=24.0.0"
+  },
+  "scripts": {
+    "check": "node --check index.js && node --check client.js",
+    "check:package": "node scripts/check-package.mjs"
+  }
+}
