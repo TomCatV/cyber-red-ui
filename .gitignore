@@ -26,3 +26,6 @@ _corrupted_*/
 *.bak
 *.bak-*
 *.repaired
+
+# 测试产物（settings-isolation.mjs 渲染的截图）
+tests/*.png

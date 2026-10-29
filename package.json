@@ -17,12 +17,18 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/huzhengcai471-crypto/cyber-red-ui.git"
+    "url": "git+https://github.com/TomCatV/cyber-red-ui.git"
   },
   "bugs": {
-    "url": "https://github.com/huzhengcai471-crypto/cyber-red-ui/issues"
+    "url": "https://github.com/TomCatV/cyber-red-ui/issues"
   },
   "homepage": "https://github.com/huzhengcai471-crypto/cyber-red-ui",
+  "contributors": [
+    {
+      "name": "huzhengcai471-crypto",
+      "url": "https://github.com/huzhengcai471-crypto/cyber-red-ui"
+    }
+  ],
   "main": "./index.js",
   "exports": {
     ".": "./index.js",
@@ -38,6 +44,11 @@
     "icon.svg",
     "README.md",
     "README.zh.md",
+    "CREDITS.md",
+    "OPTIMIZATIONS.md",
+    "install.ps1",
+    "uninstall.ps1",
+    "docs/LF-NOTES.md",
     "LICENSE",
     "locale/*.json",
     "assets/*.mp4",
@@ -66,6 +77,8 @@
   },
   "scripts": {
     "check": "node --check index.js && node --check client.js",
-    "check:package": "node scripts/check-package.mjs"
+    "check:package": "node scripts/check-package.mjs",
+    "test": "node tests/run-all.mjs",
+    "test:deps": "node scripts/prepare-test-deps.mjs"
   }
 }

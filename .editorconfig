@@ -1,0 +1,28 @@
+# 与 .gitattributes 配套：把编辑器也钉到 LF
+# 2026-10-29 追加。见 OPTIMIZATIONS.md 第 2 条。
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# client.js / index.js 是发布件，避免 IDE 保存时格式化（会破坏 tests 的字节偏移切片）
+[client.js]
+indent_size = 2
+trim_trailing_whitespace = false
+insert_final_newline = false
+
+[index.js]
+indent_size = 2
+trim_trailing_whitespace = false
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.ps1]
+indent_size = 2

@@ -1,0 +1,35 @@
+# 换行符 / 二进制保护
+#
+# 2026-10-29 追加（转载版）。上游没有这个文件，导致 Windows 上
+# core.autocrlf=true 时 client.js（8.8 MB）被整份转成 CRLF，
+# 与 Release tarball 不再逐字节一致；同时 assets/ 下的媒体没有 binary
+# 声明，存在被 Git 误判为文本而静默改写的风险。
+#
+# 详见 docs/LF-NOTES.md
+
+* text=auto eol=lf
+
+# ── 文本：强制 LF ──────────────────────────────────────────────
+*.js   text eol=lf
+*.mjs  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.yml  text eol=lf
+*.ps1  text eol=lf
+*.svg  text eol=lf
+.gitattributes text eol=lf
+.gitignore     text eol=lf
+.editorconfig  text eol=lf
+LICENSE        text eol=lf
+
+# ── 媒体素材：禁止任何转换（被换行符改写 = 素材损坏）───────────
+*.mp4  binary
+*.gif  binary
+*.flac binary
+*.wav  binary
+*.ogg  binary
+*.mp3  binary
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.tgz  binary

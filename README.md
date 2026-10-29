@@ -1,18 +1,50 @@
 # dsh-cyber-red-ui · 赛博红控台
 
+> ## ⚠️ 这是转载 + 工程优化版，不是原作
+>
+> **原作者**：[@huzhengcai471-crypto](https://github.com/huzhengcai471-crypto)
+> **原作仓库**：<https://github.com/huzhengcai471-crypto/cyber-red-ui>
+> **本仓库基线**：上游 `main@d8ba7ac4`，`dsh-cyber-red-ui@1.1.0`（2026-10-25）
+>
+> 配色令牌、扫描线叠加、实验状态栏、5 段动态视频壁纸、12 首内置曲目、
+> 「长征计划」设置页 **均为原作者作品，逐字节未改**（`index.js` / `client.js` 逻辑零改动）。
+> 本仓库只做工程层修复（`.gitattributes` 锁 LF + 媒体 binary、测试依赖回落、
+> PowerShell 安装器、槽位冲突检测、一键测试）。
+> 全部改动清单见 **[OPTIMIZATIONS.md](./OPTIMIZATIONS.md)**，完整署名见 **[CREDITS.md](./CREDITS.md)**。
+>
+> 素材版权归各自作者，按上游 LICENSE 要求**仅随包分发，不单独抽取**。
+>
+> **二次开发定制 / 改配色换壁纸 / 加曲目 / 企业内网适配 → QQ：2363984977**
+
+---
+
 A crimson-neon control-desk theme for **DeepSeek Harness (DSH)** — black base, blood-red
 glow, scanlines, a lab status rail, dynamic video wallpapers, a music player, and its own
 settings page.
 
 黑底正红霓虹主题：扫描线叠加、实验状态栏、动态视频壁纸、音乐播放器，并提供独立设置页。
 
-> Screenshots live in `docs/` once published.
+---
+
+## 转载版改了什么（v1.1.0-r1）
+
+| # | 改动 | 说明 |
+|---|---|---|
+| 1 | 新增 `.gitattributes` | `* text=auto eol=lf` + `*.mp4/*.flac/*.wav/*.ogg/*.gif binary`；Windows `core.autocrlf=true` 下 clone 会把 8.8 MB 的 `client.js` 整份转 CRLF，媒体也有被误判为文本而静默改写的风险 |
+| 2 | 新增 `.editorconfig` | 编辑器层也钉 LF；`client.js`/`index.js` 关掉保存时格式化（会破坏测试的字节偏移切片） |
+| 3 | `tests/music-player-rail.mjs` 依赖解析加回落 | 上游写死 `../music-player-test-runtime/node_modules`（作者本机才有），clone 下来必报 `Cannot find module 'react/package.json'`；现按 环境变量 → 约定路径 → 仓库 node_modules 依次回落，全不命中时打印每条尝试路径与修法 |
+| 4 | 新增 `scripts/prepare-test-deps.mjs` | 一键补齐 `react@18 + react-dom@18`，pnpm/npm 自动选 |
+| 5 | 新增 `install.ps1` / `uninstall.ps1` | PowerShell 安装器；自动写 `bundles`（上游要手动改 JSON）；**槽位冲突检测**：扫其它插件是否也注册 `shell.overlay` / `sidebar.footer.action` / `sidebar.brand.mark` / `conversation.hero.brand.mark` |
+| 6 | 新增 `tests/run-all.mjs` | 一键跑三条测试 + 语法检查；缺 playwright/react 标「跳过」而不是「失败」 |
+| 7 | 新增 `docs/LF-NOTES.md` | 换行符与素材完整性说明 |
+
+详见 [OPTIMIZATIONS.md](./OPTIMIZATIONS.md)。
 
 ---
 
 ## 安装
 
-DSH 的插件通过 profile 的 `package.json` 声明依赖。三种方式任选：
+DSH 的插件通过 profile 的 `package.json` 声明依赖。四种方式任选：
 
 ### 方式一：从 GitHub 直接安装（推荐）
 

@@ -8,10 +8,71 @@ import { fileURLToPath } from 'node:url';
 const packageRoot = fileURLToPath(new URL('../', import.meta.url));
 const runtimeModules = process.env.PLAYWRIGHT_MODULE_DIR || path.join(os.homedir(),
   '.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules');
-const { chromium } = createRequire(path.join(runtimeModules, 'package.json'))('playwright');
-const reactModules = process.env.REACT_TEST_MODULE_DIR || path.resolve(packageRoot,
-  '../music-player-test-runtime/node_modules');
-const reactRequire = createRequire(path.join(reactModules, 'package.json'));
+
+/* ── playwright 解析（2026-10-29 转载版追加容错）─────────────────────
+ * 上游只认 codex runtime 那一个固定路径。这里改成按顺序回落到：
+ *   1) PLAYWRIGHT_MODULE_DIR 环境变量
+ *   2) codex runtime 固定路径（上游原行为）
+ *   3) 本仓库自己的 node_modules
+ * 任一命中即可，全不命中才报错并提示怎么装。 */
+const playwrightCandidates = [
+  process.env.PLAYWRIGHT_MODULE_DIR,
+  path.join(os.homedir(), '.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules'),
+  path.join(packageRoot, 'node_modules'),
+  path.join(packageRoot, '..', 'node_modules'),
+].filter(Boolean);
+
+let chromium = null;
+const playwrightTried = [];
+for (const dir of playwrightCandidates) {
+  try {
+    const req = createRequire(path.join(dir, 'package.json'));
+    ({ chromium } = req('playwright'));
+    break;
+  } catch (err) {
+    playwrightTried.push(`${dir} (${err.code || err.message})`);
+  }
+}
+if (!chromium) {
+  console.error('[x] 找不到 playwright。已尝试：');
+  for (const t of playwrightTried) console.error('    - ' + t);
+  console.error('');
+  console.error('  修法一：npm i -D playwright && npx playwright install chromium');
+  console.error('  修法二：$env:PLAYWRIGHT_MODULE_DIR = "已有 playwright 的 node_modules 路径"');
+  process.exit(1);
+}
+
+/* ── react 解析（2026-10-29 转载版追加回落）─────────────────────────
+ * 上游写死 ../music-player-test-runtime/node_modules，clone 下来必然报
+ * "Cannot find module 'react/package.json'"。这里同样按顺序回落，
+ * 并给出 `node scripts/prepare-test-deps.mjs` 这条一键修法。 */
+const reactCandidates = [
+  process.env.REACT_TEST_MODULE_DIR,
+  path.resolve(packageRoot, '../music-player-test-runtime/node_modules'),
+  path.join(packageRoot, 'node_modules'),
+].filter(Boolean);
+
+let reactRequire = null;
+const reactTried = [];
+for (const dir of reactCandidates) {
+  try {
+    const req = createRequire(path.join(dir, 'package.json'));
+    req.resolve('react/package.json');
+    req.resolve('react-dom/package.json');
+    reactRequire = req;
+    break;
+  } catch (err) {
+    reactTried.push(`${dir} (${err.code || err.message})`);
+  }
+}
+if (!reactRequire) {
+  console.error('[x] 找不到 react / react-dom。已尝试：');
+  for (const t of reactTried) console.error('    - ' + t);
+  console.error('');
+  console.error('  一键修法：node scripts/prepare-test-deps.mjs');
+  console.error('  或自带：  $env:REACT_TEST_MODULE_DIR = "C:\\path\\to\\node_modules"');
+  process.exit(1);
+}
 const source = await fs.readFile(process.env.CLIENT_SOURCE || path.join(packageRoot, 'client.js'), 'utf8');
 const slice = (start, end) => {
   const offset = source.indexOf(start);
